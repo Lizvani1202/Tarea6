@@ -13,16 +13,16 @@ public class Agenda {
     private @Id @GeneratedValue Long id;
     private String fecha;
     private String hora;
-    private String especialidad;
+    private String tratamiento;
     private String odontologo;
 
     public Agenda() {
     }
 
-    public Agenda(String fecha, String hora, String especialidad, String odontologo) {
+    public Agenda(String fecha, String hora, String tratamiento, String odontologo) {
         this.fecha = fecha;
         this.hora = hora;
-        this.especialidad = especialidad;
+        this.tratamiento = tratamiento;
         this.odontologo = odontologo;
     }
 }
