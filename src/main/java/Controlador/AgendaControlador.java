@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 class AgendaControlador {
@@ -15,9 +19,17 @@ class AgendaControlador {
     }
 
     @GetMapping("/Agenda")
-    List<Agenda>all(){
-        return repository.findAll();
+    Resource<Resource<Agenda>>all(){
+        List<Resource<Agenda>> resources = repository.findAll().stream()
+                .map(agenda -> new Resource<>(agenda,
+                        linkTo(methodOn(AgendaControlador.class).one(agenda.getId())).withSelfRel(),
+                        linkTo(methodOn(AgendaControlador.class).all()).withRel("employees")))
+                .collect(Collectors.toList());
+        return new Resource<>(resources,
+                linkTo(methodOn(AgendaControlador.class).all)).withSelfRel());
+
     }
+
 
     @PostMapping("/Agenda")
     Agenda newAgenda(@RequestBody Agenda newAgenda){
