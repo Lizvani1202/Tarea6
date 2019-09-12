@@ -19,6 +19,7 @@ public class Agenda {
     public Agenda() {
     }
 
+
     public Agenda(String fecha, String hora, String tratamiento, String odontologo) {
         this.fecha = fecha;
         this.hora = hora;

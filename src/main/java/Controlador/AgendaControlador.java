@@ -2,9 +2,13 @@ package Controlador;
 
 
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.xml.ws.Response;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -43,11 +47,15 @@ class AgendaControlador {
 
 
     @PostMapping("/Agenda")
-    Agenda newAgenda(@RequestBody Agenda newAgenda){
-        return repository.save(newAgenda);
+    ResponseEntity<?> newAgenda(@RequestBody Agenda newAgenda)throws URISyntaxException {
+        org.springframework.hateoas.Resource<Agenda> resource = rescursosAgenda.toResource(repository.save(newAgenda));
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
-    @GetMapping("/Agenda{id}")
+        @GetMapping("/Agenda{id}")
     org.springframework.hateoas.Resource<Agenda> one(@PathVariable Long id){
         Agenda agenda = repository.findById(id)
                 .orElseThrow(()->new AgendaNotFoundException((id)));
