@@ -19,14 +19,14 @@ class AgendaControlador {
     }
 
     @GetMapping("/Agenda")
-    Resource<Resource<Agenda>>all(){
+    Resource<Resource<Agenda>> all(){
         List<Resource<Agenda>> resources = repository.findAll().stream()
                 .map(agenda -> new Resource<>(agenda,
                         linkTo(methodOn(AgendaControlador.class).one(agenda.getId())).withSelfRel(),
                         linkTo(methodOn(AgendaControlador.class).all()).withRel("employees")))
                 .collect(Collectors.toList());
         return new Resource<>(resources,
-                linkTo(methodOn(AgendaControlador.class).all)).withSelfRel());
+                linkTo(methodOn(AgendaControlador.class).all()).withSelfRel());
 
     }
 
@@ -43,7 +43,7 @@ class AgendaControlador {
 
         return new Resource(agenda,
                 linkTo(methodON(AgendaControlador.class).one(id)).withSelfRel(),
-                linkTo(methodON(AgendaControlador.class).all()).withSelfRel("agenda"));
+                linkTo(methodON(AgendaControlador.class).all()).withRel("agenda"));
 
     }
     @PutMapping("/Agenda/{id}")
