@@ -3,6 +3,7 @@ package Controlador;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
@@ -24,9 +25,14 @@ class AgendaControlador {
     }
 
     @GetMapping("/Agenda{id}")
-    Agenda one(@PathVariable Long id){
-        return repository.findById(id)
-                .orElseThrow(()-> new AgendaNotFoundException(id) );
+    Resource one(@PathVariable Long id){
+        Agenda agenda = repository.findById(id)
+                .orElseThrow(()->new AgendaNotFoundException((id)));
+
+        return new Resource(agenda,
+                linkTo(methodON(AgendaControlador.class).one(id)).withSelfRel(),
+                linkTo(methodON(AgendaControlador.class).all()).withSelfRel("agenda"));
+
     }
     @PutMapping("/Agenda/{id}")
     Agenda reemplazarAgenda(@RequestBody Agenda newAgenda, @PathVariable Long id){
