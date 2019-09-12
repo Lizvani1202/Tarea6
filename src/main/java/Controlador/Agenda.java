@@ -1,4 +1,4 @@
-package Modelo;
+package Controlador;
 
 import lombok.Data;
 import lombok.Generated;
