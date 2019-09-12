@@ -64,22 +64,32 @@ class AgendaControlador {
 
     }
     @PutMapping("/Agenda/{id}")
-    Agenda reemplazarAgenda(@RequestBody Agenda newAgenda, @PathVariable Long id){
+    ResponseEntity<?> replaceAgenda(@RequestBody Agenda newAgenda, @PathVariable Long id) throws URISyntaxException {
 
-        return repository.findById(id)
+        Agenda updatedEmployee = repository.findById(id)
                 .map(agenda -> {
                     agenda.setFecha(newAgenda.getFecha());
                     agenda.setHora(newAgenda.getHora());
                     agenda.setTratamiento(newAgenda.getTratamiento());
                     agenda.setOdontologo(newAgenda.getOdontologo());
+
                     return repository.save(agenda);
-                }).orElseGet(()->{
-                  newAgenda.setId(id);
-                  return repository.save(newAgenda);
-        });
+                })
+                .orElseGet(() -> {
+                    newAgenda.setId(id);
+                    return repository.save(newAgenda);
+                });
+
+        Resource<Agenda> resource = rescursosAgenda.toResource(updatedEmployee);
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
     @DeleteMapping("/Agenda/{id}")
-    void deleteAgenda(@PathVariable Long id){
+    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+
         repository.deleteById(id);
-    }
+
+        return ResponseEntity.noContent().build();}
 }
